@@ -8,7 +8,12 @@ var greetingEl = document.querySelector('.greeting');
 var eventEl = document.querySelector('.event');
 
 var dateFormats = ["dddd, MMM D, YYYY", "MMM D, YYYY", "MMMM D, YYYY h:mm A", "ddd, MMM D, YYYY h:mm A" ];
-var sportsTeams = ["Spurs", "Mavericks", "Suns"];
+// names - figure out later
+// var sportsTeams = ["Spurs", "Mavericks", "Suns"];
+
+// instead - look up teams and create DB for them if you have time
+var sportsTeamsIDs = [31, 28];
+
 var longitude = 0;
 var latitude = 0;
 
@@ -16,14 +21,14 @@ username = "Doug";
 
 var city = "San Antonio";
 
-localStorage.setItem("teams", JSON.stringify(sportsTeams));
-let newArray = JSON.parse(localStorage.getItem("teams"));
+stocks = ["IBM", "AAPL", "VLO", "TSLA", "AMZN", "NVDA"];
+
+//localStorage.setItem("teams", JSON.stringify(sportsTeams));
+//let newArray = JSON.parse(localStorage.getItem("teams"));
 
 var currentDateFormatIndex = 0;
 
 sportsAPI_key = "b5074573df57c56932b0b3096843718d";
-stocksAPI_key_yahoo = "MV2TQN7ZHOAGXTXR#1";
-stocksAPI_key_gmail = "BVLYMCBPVRQQMVOOd";
 weatherAPI_key = '260e9b6795e2166dad8db2bb1059d931';
 stocksAPI_key = 'Cb1Bt2MwPUuxnlx0AWZwo0gpHjUfTijQ';
 
@@ -68,9 +73,9 @@ const buildStocks = async function (symbols) {
         response = await fetch(stocksAPI_URL);
         if (response.ok) {
             data = await response.json();
-            console.log("STOCK DATA HERE:");
+            /*console.log("STOCK DATA HERE:");
             console.log(data);
-            console.log(data[0]['symbol']);
+            console.log(data[0]['symbol']);*/
             myArray.push([data[0]['symbol'], data[0]['price']])
         }
     }
@@ -140,9 +145,11 @@ const buildEvent = async function () {
     
 }
 
-const buildSports = async function (teams) {
+const buildSports = async function (teamIDs) {
 
-    let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
+    //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
+    // TRIAL let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
+    //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[0];
     let teamLogoURL = "";
     let winTotal = 0;
     let lossTotal = 0;
@@ -156,37 +163,41 @@ const buildSports = async function (teams) {
         headers: myHeaders,
         redirect: 'follow'
     };
-
-    response = await fetch(sportsAPI_URL, requestOptions)
- 
-    if (response.ok) {
-        data = await response.json()
-
-            winTotal = data['response'][0]['win']['total'];
-            lossTotal = data['response'][0]['loss']['total'];
-            teamLogoURL = data['response'][0]['team']['logo'];
-
-        } else {
-        alert('Error: ' + response.statusText);
-    }
-
-    let sportsContainerEl = document.createElement("div");
-    sportsContainerEl.setAttribute("class", "flex");
-
-    let teamIconEl = document.createElement("img");
+    console.log(teamIDs);
+    for (i = 0; i < teamIDs.length; i++) {
+        console.log("here:" + sportsTeamsIDs.length);
+        console.log(i);
+        let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
+        response = await fetch(sportsAPI_URL, requestOptions);
     
-    teamIconEl.setAttribute("src", teamLogoURL);
-    teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
-    
-    let winsLossesEl = document.createElement("div");
-    winsLossesEl.setAttribute("class", "flex items-center");
-    winsLossesEl.innerHTML = "WINS: " + winTotal + "  / LOSSES: " + lossTotal;
+        if (response.ok) {
+            data = await response.json()
 
-    sportsContainerEl.appendChild(teamIconEl);
-    sportsContainerEl.appendChild(winsLossesEl);
+                winTotal = data['response'][0]['win']['total'];
+                lossTotal = data['response'][0]['loss']['total'];
+                teamLogoURL = data['response'][0]['team']['logo'];
 
-    sportsEl.appendChild(sportsContainerEl);
+            } else {
+            alert('Error: ' + response.statusText);
+        }
 
+        let sportsContainerEl = document.createElement("div");
+        sportsContainerEl.setAttribute("class", "flex");
+
+        let teamIconEl = document.createElement("img");
+        
+        teamIconEl.setAttribute("src", teamLogoURL);
+        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
+        
+        let winsLossesEl = document.createElement("div");
+        winsLossesEl.setAttribute("class", "flex items-center");
+        winsLossesEl.innerHTML = "WINS: " + winTotal + "  / LOSSES: " + lossTotal;
+
+        sportsContainerEl.appendChild(teamIconEl);
+        sportsContainerEl.appendChild(winsLossesEl);
+
+        sportsEl.appendChild(sportsContainerEl);
+    }    
 }
 
 const generateGreeting = function(hour) {
@@ -205,10 +216,10 @@ const generateGreeting = function(hour) {
 currentDate = dayjs().format(dateFormats[currentDateFormatIndex]);
 dateEl.innerHTML = dayjs().format(dateFormats[currentDateFormatIndex]);
 
-buildSports(sportsTeams);
+/* HOLD buildSports(sportsTeamsIDs); */
 
 buildWeather();
-buildStocks(["IBM", "AAPL", "VLO", "TSLA", "AMZN", "NVDA"]);
+buildStocks(stocks);
 
 buildEvent();
 
