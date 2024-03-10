@@ -8,7 +8,7 @@ var greetingEl = document.querySelector('.greeting');
 var eventEl = document.querySelector('.event');
 
 var dateFormats = ["dddd, MMM D, YYYY", "MMM D, YYYY", "MMMM D, YYYY h:mm A", "ddd, MMM D, YYYY h:mm A" ];
-var sportsTeams = ["Spurs", "Mavericks"];
+var sportsTeams = ["Spurs", "Mavericks", "Suns"];
 var longitude = 0;
 var latitude = 0;
 
@@ -208,7 +208,7 @@ dateEl.innerHTML = dayjs().format(dateFormats[currentDateFormatIndex]);
 buildSports(sportsTeams);
 
 buildWeather();
-buildStocks(["IBM", "AAPL"]);
+buildStocks(["IBM", "AAPL", "VLO", "TSLA", "AMZN", "NVDA"]);
 
 buildEvent();
 
