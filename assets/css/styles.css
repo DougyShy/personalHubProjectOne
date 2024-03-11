@@ -8,7 +8,6 @@
 
 .settingsImage {
     content: url('../pics/cornerSettingImage.png'); 
-    /*src: url("assets\pics\cornerSettingImage.png)*/
     width: 3%;
     height: 3%;
     opacity: 15%;
