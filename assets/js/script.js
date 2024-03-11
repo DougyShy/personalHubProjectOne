@@ -1,5 +1,3 @@
-
-
 var dateEl = document.querySelector('.date');
 var sportsEl = document.querySelector('.sports');
 var stocksEl = document.querySelector('.stocks');
@@ -12,10 +10,16 @@ var dateFormats = ["dddd, MMM D, YYYY", "MMM D, YYYY", "MMMM D, YYYY h:mm A", "d
 // var sportsTeams = ["Spurs", "Mavericks", "Suns"];
 
 // instead - look up teams and create DB for them if you have time
-var sportsTeamsIDs = [31, 28];
+
+// basketball API IDs
+var sportsTeamsIDs = [31, 28, 29];
+
+// baseball API IDs
+// var sportsTeamsIDs = [15, 6];
 
 var longitude = 0;
 var latitude = 0;
+var itervalID = window.setInterval(updateEvent, 60000);
 
 username = "Doug";
 
@@ -31,6 +35,10 @@ var currentDateFormatIndex = 0;
 sportsAPI_key = "b5074573df57c56932b0b3096843718d";
 weatherAPI_key = '260e9b6795e2166dad8db2bb1059d931';
 stocksAPI_key = 'Cb1Bt2MwPUuxnlx0AWZwo0gpHjUfTijQ';
+
+function updateEvent() {
+    buildEvent();
+}
 
 const nextDateFormat = function() {
     currentDateFormatIndex++;
@@ -145,16 +153,198 @@ const buildEvent = async function () {
     
 }
 
+// BASEBALL BUILD
+/*const buildSports = async function (teamIDs) {
+
+    let teamData = []; // [WINS, LOSSES, LOGO-URL]
+
+    var myHeaders = new Headers();
+    myHeaders.append("x-rapidapi-key", sportsAPI_key);
+    myHeaders.append("x-rapidapi-host", "v1.baseball.api-sports.io");    
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    for (i = 0; i < teamIDs.length; i++) {
+        let newTeamData = await getTeamData(teamIDs[i]);
+        teamData.push(newTeamData);
+        console.log("TEAM DATA:" + newTeamData);
+    }
+
+    for (i = 0; i < teamData.length; i++) {
+        
+        let sportsContainerEl = document.createElement("div");
+        sportsContainerEl.setAttribute("class", "flex");
+
+        let teamIconEl = document.createElement("img");
+        
+        teamIconEl.setAttribute("src", teamData[i][2]);
+        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
+        
+        let winsLossesEl = document.createElement("div");
+        winsLossesEl.setAttribute("class", "flex items-center");
+        winsLossesEl.innerHTML = "WINS: " + teamData[i][0] + "  / LOSSES: " + teamData[i][1];
+
+        sportsContainerEl.appendChild(teamIconEl);
+        sportsContainerEl.appendChild(winsLossesEl);
+
+        sportsEl.appendChild(sportsContainerEl);
+    }
+}
+
+const getTeamData = async function (id) {
+    let sportsAPI_URL = "https://v1.baseball.api-sports.io/teams/statistics?league=1&season=2023&team=" + id;
+    let winsLossesLogo = [];
+
+    var myHeaders = new Headers();
+    myHeaders.append("x-rapidapi-key", sportsAPI_key);
+    myHeaders.append("x-rapidapi-host", "v1.baseball.api-sports.io");
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    response = await fetch(sportsAPI_URL, requestOptions);
+
+    if (response.ok) {
+        data = await response.json()
+            console.log("HERE BILLY");
+            console.log(data);
+
+            let wins = data['response']['games']['wins']['all']['total'];
+            let losses = data['response']['games']['loses']['all']['total'];
+            let logoURL = data['response']['team']['logo'];
+
+            winsLossesLogo = [wins, losses, logoURL];
+            console.log(typeof(winsLossesLogo));
+            console.log(winsLossesLogo);
+
+        } else {
+            
+             alert('Error: ' + response.statusText);
+    }
+    
+    console.log(winsLossesLogo);
+    return winsLossesLogo;
+}*/
+
+// BASKETBALL BUILD
 const buildSports = async function (teamIDs) {
+
+    let teamData = []; // [WINS, LOSSES, LOGO-URL]
+
+    var myHeaders = new Headers();
+    myHeaders.append("x-rapidapi-key", sportsAPI_key);
+    myHeaders.append("x-rapidapi-host", "v2.nba.api-sports.io");    
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    for (i = 0; i < teamIDs.length; i++) {
+        let newTeamData = await getTeamData(teamIDs[i]);
+        teamData.push(newTeamData);
+        console.log("TEAM DATA:" + newTeamData);
+    }
+
+    for (i = 0; i < teamData.length; i++) {
+        
+        let sportsContainerEl = document.createElement("div");
+        sportsContainerEl.setAttribute("class", "flex");
+
+        let teamIconEl = document.createElement("img");
+        
+        teamIconEl.setAttribute("src", teamData[i][2]);
+        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
+        
+        let winsLossesEl = document.createElement("div");
+        winsLossesEl.setAttribute("class", "flex items-center");
+        winsLossesEl.innerHTML = "WINS: " + teamData[i][0] + "  / LOSSES: " + teamData[i][1];
+
+        sportsContainerEl.appendChild(teamIconEl);
+        sportsContainerEl.appendChild(winsLossesEl);
+
+        sportsEl.appendChild(sportsContainerEl);
+    }
+}
+
+// BASKETBALL BUILD
+const getTeamData = async function (id) {
+    let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + id;
+    let winsLossesLogo = [];
+
+    var myHeaders = new Headers();
+    myHeaders.append("x-rapidapi-key", sportsAPI_key);
+    myHeaders.append("x-rapidapi-host", "v2.nba.api-sports.io");
+
+    var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    response = await fetch(sportsAPI_URL, requestOptions);
+
+    if (response.ok) {
+        data = await response.json()
+            console.log(data);
+
+            let wins = data['response'][0]['win']['total'];
+            let losses = data['response'][0]['loss']['total'];
+            let logoURL = data['response'][0]['team']['logo'];
+
+            winsLossesLogo = [wins, losses, logoURL];
+            console.log(typeof(winsLossesLogo));
+            console.log(winsLossesLogo);
+
+        } else {
+            
+             alert('Error: ' + response.statusText);
+    }
+
+    
+    console.log(winsLossesLogo);
+    return winsLossesLogo;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
     // TRIAL let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
     //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[0];
-    let teamLogoURL = "";
-    let winTotal = 0;
-    let lossTotal = 0;
 
-    var myHeaders = new Headers();
+
+    /*var myHeaders = new Headers();
     myHeaders.append("x-rapidapi-key", sportsAPI_key);
     myHeaders.append("x-rapidapi-host", "v2.nba.api-sports.io");
 
@@ -167,7 +357,9 @@ const buildSports = async function (teamIDs) {
     for (i = 0; i < teamIDs.length; i++) {
         console.log("here:" + sportsTeamsIDs.length);
         console.log(i);
-        let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
+        //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
+        let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + 15;
+        
         response = await fetch(sportsAPI_URL, requestOptions);
     
         if (response.ok) {
@@ -198,7 +390,50 @@ const buildSports = async function (teamIDs) {
 
         sportsEl.appendChild(sportsContainerEl);
     }    
-}
+    for (i = 0; i < teamIDs.length; i++) {
+        console.log("here:" + sportsTeamsIDs.length);
+
+        //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
+        console.log(i);
+        let url = ["https://v1.baseball.api-sports.io/teams/statistics?league=1&season=2023&team=15"];
+        let array = new Array;
+        //let sportsAPI_URL = "https://v1.baseball.api-sports.io/teams/statistics?league=1&season=2023&team=" + teamIDs[i];
+        
+        response = await fetch(sportsAPI_URL, requestOptions);
+    
+        if (response.ok) {
+            data = await response.json()
+                console.log("HERE BILLY");
+                console.log(data);
+
+                winTotal = data['response']['games']['wins']['all']['total'];
+                lossTotal = data['response']['games']['loses']['all']['total'];
+                teamLogoURL = data['response']['team']['logo'];
+
+                console.log(winTotal);
+
+            } else {
+            alert('Error: ' + response.statusText);
+        }
+        console.log("BILLY HOSSNESS HERE");
+        let sportsContainerEl = document.createElement("div");
+        sportsContainerEl.setAttribute("class", "flex");
+
+        let teamIconEl = document.createElement("img");
+        
+        teamIconEl.setAttribute("src", teamLogoURL);
+        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
+        
+        let winsLossesEl = document.createElement("div");
+        winsLossesEl.setAttribute("class", "flex items-center");
+        winsLossesEl.innerHTML = "WINS: " + winTotal + "  / LOSSES: " + lossTotal;
+
+        sportsContainerEl.appendChild(teamIconEl);
+        sportsContainerEl.appendChild(winsLossesEl);
+
+        sportsEl.appendChild(sportsContainerEl);
+    }
+}*/
 
 const generateGreeting = function(hour) {
     let greeting = "";
@@ -217,9 +452,10 @@ currentDate = dayjs().format(dateFormats[currentDateFormatIndex]);
 dateEl.innerHTML = dayjs().format(dateFormats[currentDateFormatIndex]);
 
 /* HOLD buildSports(sportsTeamsIDs); */
+buildSports(sportsTeamsIDs);
 
 buildWeather();
-buildStocks(stocks);
+// TOO MANY REQUESTS - WORKING - buildStocks(stocks);
 
 buildEvent();
 
