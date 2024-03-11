@@ -4,6 +4,7 @@ var stocksEl = document.querySelector('.stocks');
 var weatherEl = document.querySelector('.weather');
 var greetingEl = document.querySelector('.greeting');
 var eventEl = document.querySelector('.event');
+var settingsImageEl = document.querySelector('.settingsImage');
 
 var dateFormats = ["dddd, MMM D, YYYY", "MMM D, YYYY", "MMMM D, YYYY h:mm A", "ddd, MMM D, YYYY h:mm A" ];
 // names - figure out later
@@ -128,8 +129,8 @@ const buildWeather = async function () {
 
 var displayCurrentWeather = function (data) {
 
-    const weatherIconURL = 'https://openweathermap.org/img/wn/' + data['weather'][0]['icon'] + '@2x.png'  
-  
+    const weatherIconURL = 'https://openweathermap.org/img/wn/' + data['weather'][0]['icon'] + '@2x.png'
+    
     weatherEl.innerHTML = "<h1>" + data['name'] + " (" + dayjs().format("M/D/YYYY") + ")" + "<img class='weatherIcon' src='" + weatherIconURL + "'/></h1>" +
                                    "<h2>- Temp: " + data['main']['temp'] + "°&nbspF</h2><h2>- Wind: &nbsp" + data['wind'].speed + "&nbsp MPH</h2><h2>- Humidity: &nbsp" + data['main']['humidity'] + "&nbsp%</h2>";
     
@@ -153,7 +154,8 @@ const buildEvent = async function () {
     
 }
 
-// BASEBALL BUILD
+// BASEBALL BUILD - KEEP - CAN BE UTILIZED FOR OPTIONS LATER
+
 /*const buildSports = async function (teamIDs) {
 
     let teamData = []; // [WINS, LOSSES, LOGO-URL]
@@ -315,126 +317,6 @@ const getTeamData = async function (id) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
-    // TRIAL let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=31";
-    //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[0];
-
-
-    /*var myHeaders = new Headers();
-    myHeaders.append("x-rapidapi-key", sportsAPI_key);
-    myHeaders.append("x-rapidapi-host", "v2.nba.api-sports.io");
-
-    var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-    console.log(teamIDs);
-    for (i = 0; i < teamIDs.length; i++) {
-        console.log("here:" + sportsTeamsIDs.length);
-        console.log(i);
-        //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
-        let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + 15;
-        
-        response = await fetch(sportsAPI_URL, requestOptions);
-    
-        if (response.ok) {
-            data = await response.json()
-
-                winTotal = data['response'][0]['win']['total'];
-                lossTotal = data['response'][0]['loss']['total'];
-                teamLogoURL = data['response'][0]['team']['logo'];
-
-            } else {
-            alert('Error: ' + response.statusText);
-        }
-
-        let sportsContainerEl = document.createElement("div");
-        sportsContainerEl.setAttribute("class", "flex");
-
-        let teamIconEl = document.createElement("img");
-        
-        teamIconEl.setAttribute("src", teamLogoURL);
-        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
-        
-        let winsLossesEl = document.createElement("div");
-        winsLossesEl.setAttribute("class", "flex items-center");
-        winsLossesEl.innerHTML = "WINS: " + winTotal + "  / LOSSES: " + lossTotal;
-
-        sportsContainerEl.appendChild(teamIconEl);
-        sportsContainerEl.appendChild(winsLossesEl);
-
-        sportsEl.appendChild(sportsContainerEl);
-    }    
-    for (i = 0; i < teamIDs.length; i++) {
-        console.log("here:" + sportsTeamsIDs.length);
-
-        //let sportsAPI_URL = "https://v2.nba.api-sports.io/standings?league=standard&season=2023&team=" + teamIDs[i];
-        console.log(i);
-        let url = ["https://v1.baseball.api-sports.io/teams/statistics?league=1&season=2023&team=15"];
-        let array = new Array;
-        //let sportsAPI_URL = "https://v1.baseball.api-sports.io/teams/statistics?league=1&season=2023&team=" + teamIDs[i];
-        
-        response = await fetch(sportsAPI_URL, requestOptions);
-    
-        if (response.ok) {
-            data = await response.json()
-                console.log("HERE BILLY");
-                console.log(data);
-
-                winTotal = data['response']['games']['wins']['all']['total'];
-                lossTotal = data['response']['games']['loses']['all']['total'];
-                teamLogoURL = data['response']['team']['logo'];
-
-                console.log(winTotal);
-
-            } else {
-            alert('Error: ' + response.statusText);
-        }
-        console.log("BILLY HOSSNESS HERE");
-        let sportsContainerEl = document.createElement("div");
-        sportsContainerEl.setAttribute("class", "flex");
-
-        let teamIconEl = document.createElement("img");
-        
-        teamIconEl.setAttribute("src", teamLogoURL);
-        teamIconEl.setAttribute("class", "teamIcon flex-row w-1/5 p-3" );
-        
-        let winsLossesEl = document.createElement("div");
-        winsLossesEl.setAttribute("class", "flex items-center");
-        winsLossesEl.innerHTML = "WINS: " + winTotal + "  / LOSSES: " + lossTotal;
-
-        sportsContainerEl.appendChild(teamIconEl);
-        sportsContainerEl.appendChild(winsLossesEl);
-
-        sportsEl.appendChild(sportsContainerEl);
-    }
-}*/
-
 const generateGreeting = function(hour) {
     let greeting = "";
     if (hour > 15) {
@@ -448,18 +330,24 @@ const generateGreeting = function(hour) {
     greetingEl.innerHTML = greeting;
 }
 
+const showSettings = function() {
+    console.log("MOUSEOVER");
+}
+
+
+
 currentDate = dayjs().format(dateFormats[currentDateFormatIndex]);
 dateEl.innerHTML = dayjs().format(dateFormats[currentDateFormatIndex]);
 
 /* HOLD buildSports(sportsTeamsIDs); */
-buildSports(sportsTeamsIDs);
+//buildSports(sportsTeamsIDs);
 
 buildWeather();
 // TOO MANY REQUESTS - WORKING - buildStocks(stocks);
-
 buildEvent();
 
 generateGreeting(dayjs().hour());
 
 dateEl.addEventListener('click', nextDateFormat);
 eventEl.addEventListener('click', buildEvent);
+settingsImageEl.addEventListener('mouseover', showSettings);
