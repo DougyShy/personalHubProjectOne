@@ -26,7 +26,8 @@ username = "Doug";
 
 var city = "San Antonio";
 
-stocks = ["IBM", "AAPL", "VLO", "TSLA", "AMZN", "NVDA"];
+//stocks = ["IBM"]];
+stocks = ["IBM"];
 
 //localStorage.setItem("teams", JSON.stringify(sportsTeams));
 //let newArray = JSON.parse(localStorage.getItem("teams"));
@@ -73,6 +74,7 @@ async function setCityLonLat(city) {
   };
 
 const buildStocks = async function (symbols) {
+
     let stocks = symbols;
 
     myArray = [];
@@ -82,14 +84,9 @@ const buildStocks = async function (symbols) {
         response = await fetch(stocksAPI_URL);
         if (response.ok) {
             data = await response.json();
-            /*console.log("STOCK DATA HERE:");
-            console.log(data);
-            console.log(data[0]['symbol']);*/
             myArray.push([data[0]['symbol'], data[0]['price']])
         }
     }
-    
-    
 
     let stocksContainer = document.createElement("div");
     stocksContainer.setAttribute("class", "flex flex-wrap");
@@ -215,23 +212,18 @@ const getTeamData = async function (id) {
 
     if (response.ok) {
         data = await response.json()
-            console.log("HERE BILLY");
-            console.log(data);
 
             let wins = data['response']['games']['wins']['all']['total'];
             let losses = data['response']['games']['loses']['all']['total'];
             let logoURL = data['response']['team']['logo'];
 
             winsLossesLogo = [wins, losses, logoURL];
-            console.log(typeof(winsLossesLogo));
-            console.log(winsLossesLogo);
 
         } else {
             
              alert('Error: ' + response.statusText);
     }
     
-    console.log(winsLossesLogo);
     return winsLossesLogo;
 }*/
 
@@ -253,7 +245,6 @@ const buildSports = async function (teamIDs) {
     for (i = 0; i < teamIDs.length; i++) {
         let newTeamData = await getTeamData(teamIDs[i]);
         teamData.push(newTeamData);
-        console.log("TEAM DATA:" + newTeamData);
     }
 
     for (i = 0; i < teamData.length; i++) {
@@ -296,23 +287,18 @@ const getTeamData = async function (id) {
 
     if (response.ok) {
         data = await response.json()
-            console.log(data);
 
             let wins = data['response'][0]['win']['total'];
             let losses = data['response'][0]['loss']['total'];
             let logoURL = data['response'][0]['team']['logo'];
 
             winsLossesLogo = [wins, losses, logoURL];
-            console.log(typeof(winsLossesLogo));
-            console.log(winsLossesLogo);
 
         } else {
             
              alert('Error: ' + response.statusText);
     }
 
-    
-    console.log(winsLossesLogo);
     return winsLossesLogo;
 }
 
@@ -330,24 +316,28 @@ const generateGreeting = function(hour) {
     greetingEl.innerHTML = greeting;
 }
 
-const showSettings = function() {
-    console.log("MOUSEOVER");
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function showSettings() {
+    console.log ("settings");
 }
 
 
-
+//buildStocks(stocks)
 currentDate = dayjs().format(dateFormats[currentDateFormatIndex]);
 dateEl.innerHTML = dayjs().format(dateFormats[currentDateFormatIndex]);
 
-/* HOLD buildSports(sportsTeamsIDs); */
-//buildSports(sportsTeamsIDs);
-
 buildWeather();
-// TOO MANY REQUESTS - WORKING - buildStocks(stocks);
+
 buildEvent();
 
 generateGreeting(dayjs().hour());
 
+/* HOLD buildSports(sportsTeamsIDs); */
+//buildSports(sportsTeamsIDs);
+
 dateEl.addEventListener('click', nextDateFormat);
 eventEl.addEventListener('click', buildEvent);
-settingsImageEl.addEventListener('mouseover', showSettings);
+settingsImageEl.addEventListener('click', showSettings);
